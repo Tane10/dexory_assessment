@@ -1,1 +1,57 @@
-GET http://localhost:8080/view
+# Test the GET /view/{id} route
+GET http://localhost:8080/view/123
+Accept: application/json
+
+###
+
+# Test the POST /upload route
+POST http://localhost:8080/upload?type=json
+Content-Type: multipart/form-data; boundary=----boundary
+
+------boundary
+Content-Disposition: form-data; name="json"; filename="report-1632931462-550e8400.json"
+Content-Type: application/json
+
+[
+  {
+    "name": "ZA001A",
+    "scanned": true,
+    "occupied": true,
+    "detected_barcodes": ["DX9850004338"]
+  },
+  {
+    "name": "ZA002A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  }
+]
+------boundary--
+
+###
+
+# Test the GET /report route
+GET http://localhost:8080/report
+Accept: application/json
+
+###
+
+# Test the POST /report route
+POST http://localhost:8080/report
+Content-Type: application/json
+
+{
+  "reportType": "summary",
+  "dateRange": "last_7_days"
+}
+
+###
+
+# Test the POST /export route
+POST http://localhost:8080/export
+Content-Type: application/json
+
+{
+  "exportFormat": "csv",
+  "filter": "last_month"
+}

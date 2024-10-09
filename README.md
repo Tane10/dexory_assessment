@@ -13,6 +13,12 @@ generate a comparison report.
 ● The JSON and CSV upload endpoints accept the format supplied in the sample files
 accompanying this coding exercise.
 
+NOTE: there is a 10mb file upload limit on the upload route meaning the robot will have to chuck data in MAX 10mb files when doing the scans. this is because AWS API Gateway has a 10MB payload 1limit
+
+
+NOTE: We are going under the assumption that the JSON files are being sent from the robot name like so: report-{MS timestamp}-{base64 encoded UUID}.json => report-1632931462-550e8400.json
+
+
 TODO:
 
 #### 1. Set Up the Server and Routes
@@ -44,7 +50,7 @@ FUNCTION viewHandler(w http.ResponseWriter, r *http.Request):
         RETURN all files as JSON
 ```
 
-#### 3. Create a POST Request for `/upload`
+#### 3. Create a POST Request for `/upload` [DONE]
 
 ```
 FUNCTION uploadHandler(w http.ResponseWriter, r *http.Request):

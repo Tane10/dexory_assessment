@@ -1,0 +1,64 @@
+// {
+//     "name": "ZA001A",
+//     "scanned": true,
+//     "occupied": true,
+//     "detected_barcodes": [
+//       "DX9850004338"
+//     ]
+//   },
+
+func viewHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid request method, only GET is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+func uploadHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method, only POST is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	contentType := r.Header.Get("Content-Type")
+	switch contentType {
+	case "application/json":
+
+		handleJSON(w, r)
+
+	case "text/csv":
+
+		handleCSV(w, r)
+
+	default:
+
+		http.Error(w, "Unsupported Content-Type", http.StatusUnsupportedMediaType)
+	}
+}
+
+func handleJSON(w http.ResponseWriter, r *http.Request) {
+}
+
+func handleCSV(w http.ResponseWriter, r *http.Request) {
+}
+
+func compare() {}
+
+func reportHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid request method, only GET is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+func exportHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid request method, only GET is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+
+!-- View file content -->
+<!--<h2>Uploaded File Content:</h2>-->
+<!--<pre>{{ .Files }}</pre>-->
+<!--{{ else }}-->
+<!--<p>No file uploaded yet.</p>-->
+<!--{{ end }}-->
+

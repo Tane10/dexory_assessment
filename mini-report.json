@@ -1,0 +1,68 @@
+[
+  {
+    "name": "ZA001A",
+    "scanned": true,
+    "occupied": true,
+    "detected_barcodes": ["DX9850004338"]
+  },
+  {
+    "name": "ZA002A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA003A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA004A",
+    "scanned": true,
+    "occupied": true,
+    "detected_barcodes": ["DX9850004348"]
+  },
+  {
+    "name": "ZA005A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA006A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA007A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA008A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA009A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA010A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA011A",
+    "scanned": true,
+    "occupied": false,
+    "detected_barcodes": []
+  }
+]
