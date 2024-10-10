@@ -14,10 +14,8 @@ func main() {
 
 	routes.UploadRoutes()
 	routes.HomeRoutes()
-
-	// http.HandleFunc("/view", viewHandler)     // For JSON uploads
-	// http.HandleFunc("/report", reportHandler) // For JSON uploads
-	// http.HandleFunc("/export", exportHandler) // For JSON uploads
+	// routes.ViewRoutes()
+	routes.ReportRoutes()
 
 	// Start the server
 	fmt.Println("Server started at :8080")

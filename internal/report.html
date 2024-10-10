@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .success {
+        background-color: #d4edda;
+      }
+      .error {
+        background-color: #f8d7da;
+      }
+      .warning {
+        background-color: #fff3cd;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Location Comparison Report</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Location Name</th>
+          <th>Scanned Status</th>
+          <th>Occupied Status</th>
+          <th>Expected Barcodes</th>
+          <th>Actual Barcodes</th>
+          <th>Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Example Row 1 - Success -->
+        <tr class="success">
+          <td>ZA001A</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>DX9850004338</td>
+          <td>DX9850004338</td>
+          <td>Location was occupied by the expected items</td>
+        </tr>
+        <!-- Example Row 2 - Success -->
+        <tr class="success">
+          <td>ZA002B</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>Location was empty, as expected</td>
+        </tr>
+        <!-- Example Row 3 - Error -->
+        <tr class="error">
+          <td>ZA003C</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>DX9850005339, DX9850005340</td>
+          <td>DX9850005339</td>
+          <td>Location was occupied by the wrong items</td>
+        </tr>
+        <!-- Example Row 4 - Warning -->
+        <tr class="warning">
+          <td>ZA004D</td>
+          <td>No</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>Location could not be scanned</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- You can add a summary at the end -->
+    <h2>Summary</h2>
+    <p><strong>Total Locations Scanned:</strong> 3</p>
+    <p><strong>Locations Successfully Occupied:</strong> 1</p>
+    <p><strong>Locations with Errors:</strong> 1</p>
+  </body>
+</html>

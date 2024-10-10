@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/tane10/dexory_assignment/api"
 	"io"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/tane10/dexory_assignment/api"
 )
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -31,13 +32,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(fmt.Sprintf("File type is: %s", fileType))
-
-	if fileType != "json" && fileType != "csv" {
-		http.Error(w, api.NewCustomError("Unsupported file type, only json or csv is supported.", ""), http.StatusBadRequest)
-		return
-	}
-
 	// bitwise left shit operation => 10 * 2^20 => 10485760
 	err := r.ParseMultipartForm(10 << 20) // 10MB limit
 	if err != nil {
@@ -53,7 +47,15 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, api.NewCustomError("Unsupported Content-Type", ""), http.StatusUnsupportedMediaType)
 	}
 
-	file, fileHeader, err := r.FormFile(fileType)
+	file, fileHeader, err := r.FormFile("file")
+
+	if !strings.HasSuffix(strings.ToLower(fileHeader.Filename), ".json") &&
+		!strings.HasSuffix(strings.ToLower(fileHeader.Filename), ".csv") {
+		http.Error(w, api.NewCustomError("Unsupported file type, only json or csv is supported.", ""), http.StatusBadRequest)
+
+		file.Close()
+		return
+	}
 
 	if err != nil {
 		http.Error(w,

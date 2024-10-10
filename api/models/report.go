@@ -1,6 +1,6 @@
 package models
 
-type RobotScanData struct {
+type Locations struct {
 	Name             string   `json:"name"`
 	Scanned          bool     `json:"scanned"`
 	Occupied         bool     `json:"occupied"`

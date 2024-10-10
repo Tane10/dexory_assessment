@@ -8,8 +8,8 @@
   {
     "name": "ZA002A",
     "scanned": true,
-    "occupied": false,
-    "detected_barcodes": []
+    "occupied": true,
+    "detected_barcodes": ["DX9850004338", "DX9850004348"]
   },
   {
     "name": "ZA003A",
@@ -62,7 +62,7 @@
   {
     "name": "ZA011A",
     "scanned": true,
-    "occupied": false,
+    "occupied": true,
     "detected_barcodes": []
   }
 ]

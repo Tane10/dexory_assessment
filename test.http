@@ -9,7 +9,7 @@ POST http://localhost:8080/upload?type=json
 Content-Type: multipart/form-data; boundary=----boundary
 
 ------boundary
-Content-Disposition: form-data; name="json"; filename="report-1632931462-550e8400.json"
+Content-Disposition: form-data; name="file"; filename="weoo.json"
 Content-Type: application/json
 
 [
@@ -31,7 +31,7 @@ Content-Type: application/json
 ###
 
 # Test the GET /report route
-GET http://localhost:8080/report
+GET http://localhost:8080/view?file=mini-report.json
 Accept: application/json
 
 ###
@@ -40,10 +40,7 @@ Accept: application/json
 POST http://localhost:8080/report
 Content-Type: application/json
 
-{
-  "reportType": "summary",
-  "dateRange": "last_7_days"
-}
+{"files": ["mini-cust.csv","mini-robot.json" ]}
 
 ###
 
