@@ -15,7 +15,7 @@ import (
 	"github.com/tane10/dexory_assignment/api"
 )
 
-func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd string, fileData *os.File) {
+func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd string, fileName *string, fileData *os.File) {
 	fAction := strings.ToLower(action)
 
 	var reportData *[]models.Report
@@ -27,12 +27,14 @@ func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd st
 		return
 	}
 
-	tmpFileName := fmt.Sprintf("%s.csv", strings.TrimSuffix(fileData.Name(), ".json"))
+	noPrefixFileName := strings.TrimPrefix(*fileName, "reports/")
 
-	tmpFile, err := os.CreateTemp("", tmpFileName)
+	tmpCsvFileName := fmt.Sprintf("%s.csv", strings.TrimSuffix(noPrefixFileName, ".json"))
+
+	tmpFile, err := os.CreateTemp("", tmpCsvFileName)
 	if err != nil {
 		http.Error(w,
-			api.NewCustomError("Unable to create temporary file", ""),
+			api.NewCustomError("Unable to create temporary file", err.Error()),
 			http.StatusInternalServerError)
 		return
 	}
@@ -72,9 +74,11 @@ func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd st
 		}
 	}
 
+	// TODO: We now have a tmp file downloaded with no data
+
 	// Serve the CSV file for download
 	w.Header().Set("Content-Type", "text/csv")
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", tmpFile.Name()))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", tmpCsvFileName))
 	http.ServeFile(w, r, tmpFile.Name())
 
 }
@@ -116,8 +120,9 @@ func ViewHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Failed to send file contents: %v", err), http.StatusInternalServerError)
 			return
 		}
-	}
+	} else {
+		actionHandler(action, w, r, cwd, &fileName, file)
 
-	actionHandler(action, w, r, cwd, file)
+	}
 
 }

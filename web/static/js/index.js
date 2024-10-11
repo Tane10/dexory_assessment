@@ -1,5 +1,6 @@
 const fileUploadHandler = async (event) => {
   event.preventDefault();
+  //TODO: Make sure we page refreash when file is uploaded
 
   //TODO: Fix index.js:19 => POST http://localhost:8080/upload?type=json 415 (Unsupported Media Type)
 
@@ -55,6 +56,7 @@ const handleReportCheckboxChange = (selectedCheckbox) => {
 };
 
 const generateReportHandler = async (event) => {
+  //TODO: page refreash when report is generatee
   if (event) event.preventDefault();
   const checkedBoxes = document.querySelectorAll(".item-checkbox:checked");
   const selectedFiles = Array.from(checkedBoxes).map((cb) => cb.value);
@@ -132,24 +134,26 @@ const reportDisplayHandler = async () => {
     data.forEach((item) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-            <td>${item.Location}</td>
-            <td>${item.Scanned ? "Yes" : "No"}</td>
-            <td>${item.Occupied ? "Yes" : "No"}</td>
+            <td>${item.location}</td>
+            <td>${item.scanned ? "Yes" : "No"}</td>
+            <td>${item.occupied ? "Yes" : "No"}</td>
             <td>${
-              item.ExpectedItems
-                ? item.ExpectedItems.split(", ")
+              item.expectedItems
+                ? item.expectedItems
+                    .split(", ")
                     .map((barcode) => barcode.trim())
                     .join(", ")
                 : ""
             }</td>
             <td>${
-              item.DetectedBarcodes
-                ? item.DetectedBarcodes.split(", ")
+              item.detectedBarcodes
+                ? item.detectedBarcodes
+                    .split(", ")
                     .map((barcode) => barcode.trim())
                     .join(", ")
                 : ""
             }</td>
-            <td>${item.Outcome}</td>
+            <td>${item.outcome}</td>
         `;
       tbody.appendChild(row);
     });
@@ -172,9 +176,10 @@ const reportDisplayHandler = async () => {
 };
 
 const downloadHandler = async () => {
+  // TODO: start file download when we get response
   try {
     const response = await fetch(
-      `/view?file=reports/report_10-10-2024_20:17:19_kPm0bHOaQdOkGOFHkDfmyQ.json&action=download`
+      `/view?file=reports/report_11-10-2024_17:36:33_H4WVbD6xSOijV-bNFBCAGA.json&action=download`
     );
     if (!response.ok) {
       throw new Error(response);
