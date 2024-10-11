@@ -7,7 +7,7 @@ type Locations struct {
 	DetectedBarcodes []string `json:"detected_barcodes"`
 }
 
-type CsvCustomerData struct {
-	Location string `json:"location"`
-	Item     string `json:"item"`
+type FileData struct {
+	Name string `json:"name"`
+	Dir  string `json:"dir"`
 }

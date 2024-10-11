@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"github.com/tane10/dexory_assignment/utils"
 	"io"
 	"net/http"
 	"os"
@@ -51,12 +52,8 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	cwd, wdErr := os.Getwd()
-
+	cwd, wdErr := utils.GetWorkingDirectory(w)
 	if wdErr != nil {
-		http.Error(w,
-			api.NewCustomError("Failed to get working directory", wdErr.Error()),
-			http.StatusInternalServerError)
 		return
 	}
 

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/tane10/dexory_assignment/utils"
 	"io"
 	"net/http"
 	"os"
@@ -21,12 +22,8 @@ func ViewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cwd, wdErr := os.Getwd()
-
+	cwd, wdErr := utils.GetWorkingDirectory(w)
 	if wdErr != nil {
-		http.Error(w,
-			api.NewCustomError("Failed to get working directory", wdErr.Error()),
-			http.StatusInternalServerError)
 		return
 	}
 
