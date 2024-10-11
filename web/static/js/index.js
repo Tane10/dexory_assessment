@@ -184,6 +184,22 @@ const downloadHandler = async () => {
     if (!response.ok) {
       throw new Error(response);
     }
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+
+    link.download = "report_11-10-2024_17:36:33_H4WVbD6xSOijV-bNFBCAGA.csv";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(url);
   } catch (err) {
     throw err;
   }

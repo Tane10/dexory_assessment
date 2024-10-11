@@ -18,7 +18,7 @@ import (
 func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd string, fileName *string, fileData *os.File) {
 	fAction := strings.ToLower(action)
 
-	var reportData *[]models.Report
+	var reportData []models.Report
 
 	if fAction != "download" {
 		http.Error(w,
@@ -49,7 +49,6 @@ func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd st
 
 	writer := csv.NewWriter(tmpFile)
 	// Flush the writer
-	defer writer.Flush()
 
 	header := []string{"Location", "Scanned", "Occupied", "ExpectedItems", "DetectedBarcodes", "Outcome"}
 
@@ -60,7 +59,7 @@ func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd st
 	}
 
 	// Write each report to the CSV file
-	for _, report := range *reportData {
+	for _, report := range reportData {
 		record := []string{
 			report.Location,
 			fmt.Sprintf("%v", report.Scanned),
@@ -69,10 +68,15 @@ func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd st
 			report.DetectedBarcodes,
 			report.Outcome,
 		}
+
 		if err := writer.Write(record); err != nil {
+			http.Error(w,
+				api.NewCustomError("Failed to write report data to CSV", err.Error()), http.StatusInternalServerError)
 			return
 		}
 	}
+
+	writer.Flush()
 
 	// TODO: We now have a tmp file downloaded with no data
 
