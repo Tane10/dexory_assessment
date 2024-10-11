@@ -1,109 +1,80 @@
-CURL Tests:
+# File Upload and Comparison Web Application
 
-```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:8080/upload
+## Overview
+
+This web application allows users to upload CSV or JSON files and compare the contents of the uploaded files. It provides a user-friendly interface for selecting files, viewing reports, and downloading results.
+
+## Features
+
+- **File Upload**: Users can upload CSV or JSON files.
+- **File Comparison**: After uploading, users can select files to compare.
+- **Report Generation**: The application generates a comparison report based on the uploaded files.
+- **User Interface**: A clean and simple UI built with HTML, CSS, and Bootstrap for responsive design.
+- **Scrollable Table**: Reports are displayed in a scrollable table format for easy viewing.
+
+## Technologies Used
+
+- Go (Golang) for the backend server
+- HTML, CSS, Bootstrap for the frontend
+- JavaScript for asynchronous requests
+- JSON and CSV formats for data storage and exchange
+
+## Installation
+
+1. **Clone the Repository**:
+
+   ```bash
+   git clone https://github.com/tane10/dexory_assignment.git
+   cd dexory_assignment
+   ```
+
+2. **Install Dependencies**:
+   Make sure you have Go installed. You can download it from [the official Go website](https://golang.org/dl/).
+
+3. **Run the Application**:
+   Navigate to the project directory and run:
+   ```bash
+   go run main.go
+   ```
+   The application will start running on `http://localhost:8080`.
+
+## Usage
+
+1. Open your web browser and navigate to `http://localhost:8080`.
+2. Use the "Choose a file to upload" button to select a CSV or JSON file from your local machine.
+3. After uploading, you can select files from the dropdown to compare.
+4. Click the "Click to Generate Reports" button to view the comparison report.
+5. Reports will be displayed in a scrollable table format.
+6. Optionally, you can download the report as needed.
+
+## Directory Structure
+
+```plaintext
+/your_project
+├── internal                  # Internal packages for private use
+│   └── directory_utils.go    # Utility functions for handling directories
+├── static                    # Static assets (CSS, JS)
+│   ├── css
+│   └── js
+├── templates                 # HTML templates for rendering views
+│   └── index.html
+└── main.go                   # Main application entry point
 ```
 
-Functional requirements
-● A web application is available which can consume JSON from a robot and store it in an
-appropriate data store.
-● A user can select a previously-uploaded JSON payload, and upload a CSV report to
-generate a comparison report.
-● A user can view or export the comparison report in an appropriate format.
-● The JSON and CSV upload endpoints accept the format supplied in the sample files
-accompanying this coding exercise.
+## Functionality
 
-NOTE: there is a 10mb file upload limit on the upload route meaning the robot will have to chuck data in MAX 10mb files when doing the scans. this is because AWS API Gateway has a 10MB payload 1limit
+### File Upload
 
+- Users can upload files via a form that restricts uploads to CSV and JSON formats.
 
-NOTE: We are going under the assumption that the JSON files are being sent from the robot name like so: report-{MS timestamp}-{base64 encoded UUID}.json => report-1632931462-550e8400.json
+### File Comparison
 
+- The application compares the contents of the uploaded files and generates a report displaying:
+  - The name of the location
+  - Whether or not the location was successfully scanned
+  - Whether or not the location was occupied
+  - The expected and detected barcodes
 
-TODO:
+### Report Generation
 
-#### 1. Set Up the Server and Routes
-
-```
-FUNCTION main():
-    INITIALIZE a web server
-    DEFINE routes:
-        GET /view/{id} -> viewHandler
-        POST /upload -> uploadHandler
-        GET /report -> reportHandler
-        POST /report -> reportHandler
-        POST /export -> exportHandler
-    START the server on port 8080
-```
-
-#### 2. Create a GET Request for `/view/{id}`
-
-```
-FUNCTION viewHandler(w http.ResponseWriter, r *http.Request):
-    EXTRACT the {id} from the URL parameters
-    IF {id} is provided THEN:
-        SEARCH for the file corresponding to {id}
-        IF file found THEN:
-            RETURN the file data as JSON
-        ELSE:
-            RETURN 404 Not Found
-    ELSE:
-        RETURN all files as JSON
-```
-
-#### 3. Create a POST Request for `/upload` [DONE]
-
-```
-FUNCTION uploadHandler(w http.ResponseWriter, r *http.Request):
-    DETERMINE the Content-Type from the request header
-    IF Content-Type is "application/json" THEN:
-        PARSE the JSON data
-        VALIDATE the data format
-        SAVE the data to a file or database
-        RETURN success response
-    ELSE IF Content-Type is "text/csv" THEN:
-        READ the CSV data
-        VALIDATE the data format
-        SAVE the data to a file or database
-        RETURN success response
-    ELSE:
-        RETURN 400 Bad Request for unsupported Content-Type
-```
-
-#### 4. Create a Data Comparison Function
-
-```
-FUNCTION compareData(csvData, jsonData):
-    CONVERT both datasets into a comparable format (e.g., maps, slices)
-    COMPARE the two datasets:
-        FOR each item in csvData:
-            CHECK if it exists in jsonData
-        RETURN comparison result (e.g., differences found)
-```
-
-#### 5. Create a GET & POST Request for `/report`
-
-```
-FUNCTION reportHandler(w http.ResponseWriter, r *http.Request):
-    IF r.Method is GET THEN:
-        FETCH existing reports from the storage
-        RETURN reports as JSON
-    ELSE IF r.Method is POST THEN:
-        PARSE the request body for new report criteria
-        VALIDATE the criteria
-        GENERATE a new report based on the criteria
-        SAVE the report
-        RETURN success response
-    ELSE:
-        RETURN 405 Method Not Allowed
-```
-
-#### 6. Create a POST Request for `/export`
-
-```
-FUNCTION exportHandler(w http.ResponseWriter, r *http.Request):
-    PARSE the request body for export criteria (e.g., report ID)
-    VALIDATE the criteria
-    GENERATE the export file (e.g., CSV or PDF)
-    SET appropriate headers for file download (Content-Disposition)
-    WRITE the file content to the response writer
-```
+- A report is generated and displayed in a scrollable HTML table, allowing for easy access to information.
