@@ -55,7 +55,9 @@
                         <input
                         type="checkbox"
                         class="item-checkbox"
-                        value="{{ .Name }}"/>
+                        value="{{ .Name }}"
+                        onchange="handleSelectFilesCheckboxChange(this)"
+                        />
                          {{ .Name }}
                     </label>
                 </li>
@@ -68,7 +70,7 @@
       <div class="mb-4">
         <!-- Button to compare two files -->
         <form id="generate-report-form">
-          <button type="submit" id="generate-report" class="btn btn-success" onclick="generateReportHandler(event)">
+          <button type="submit" id="generate-report" class="btn btn-success" onclick="generateReportHandler(event)" disabled>
             Click to Generate Reports
           </button>
         </form>
@@ -107,7 +109,7 @@
     </p>
         </div>
         <div class="mb-8">
-            <button class="btn btn-primary" type="button" aria-expanded="false"  onclick="reportDisplayHandler()">
+            <button class="btn btn-primary" id="view-report-btn" type="button" aria-expanded="false"  onclick="reportDisplayHandler()" disabled>
                   View a report
             </button>
         </p>
@@ -123,7 +125,7 @@
       
     <div class="mb-8"> 
        
-        <button type="button" class="btn btn-info" onclick="downloadHandler()"> Download File</button>
+        <button type="button" id="download-report-btn" class="btn btn-info" onclick="downloadHandler()" disabled> Download File</button>
       </form>
 
     </div>

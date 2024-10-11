@@ -1,6 +1,5 @@
 const fileUploadHandler = async (event) => {
   event.preventDefault();
-  //TODO: Make sure we page refreash when file is uploaded
 
   //TODO: Fix index.js:19 => POST http://localhost:8080/upload?type=json 415 (Unsupported Media Type)
 
@@ -25,12 +24,12 @@ const fileUploadHandler = async (event) => {
     });
 
     if (response.ok) {
-      const result = await response.text(); // Get the response as text (or JSON if you prefer)
-
-      console.log(result);
-      document.getElementById(
-        "message"
-      ).innerText = `Upload successful: ${result}`;
+      //TODO add message when upload done
+      // const result = await response.text(); // Get the response as text (or JSON if you prefer)
+      // console.log(result);
+      // document.getElementById(
+      //   "message"
+      // ).innerText = `Upload successful: ${result}`;
     }
 
     // else {
@@ -42,6 +41,8 @@ const fileUploadHandler = async (event) => {
   } catch (error) {
     console.error(error);
   }
+
+  window.location.reload();
 };
 
 const handleReportCheckboxChange = (selectedCheckbox) => {
@@ -53,10 +54,26 @@ const handleReportCheckboxChange = (selectedCheckbox) => {
       checkbox.checked = false; // Uncheck the checkbox
     }
   });
+
+  const viewReport = document.getElementById("view-report-btn");
+  const downloadReport = document.getElementById("download-report-btn");
+
+  const allUnchecked = Array.from(checkboxes).every(
+    (checkbox) => !checkbox.checked
+  );
+
+  if (selectedCheckbox.checked) {
+    viewReport.disabled = false;
+    downloadReport.disabled = false;
+  }
+
+  if (allUnchecked) {
+    viewReport.disabled = true;
+    downloadReport.disabled = true;
+  }
 };
 
 const generateReportHandler = async (event) => {
-  //TODO: page refreash when report is generatee
   if (event) event.preventDefault();
   const checkedBoxes = document.querySelectorAll(".item-checkbox:checked");
   const selectedFiles = Array.from(checkedBoxes).map((cb) => cb.value);
@@ -87,6 +104,7 @@ const generateReportHandler = async (event) => {
     console.error(error);
     return;
   }
+  window.location.reload();
 };
 
 const reportDisplayHandler = async () => {
@@ -176,10 +194,23 @@ const reportDisplayHandler = async () => {
 };
 
 const downloadHandler = async () => {
-  // TODO: start file download when we get response
+  const selectedReport = document.querySelectorAll(".report-item-input");
+
+  let report = "";
+  selectedReport.forEach((r) => {
+    if (r.checked) {
+      report = r.value;
+    }
+  });
+
+  if (selectedReport.length == 0) {
+    alert("Please select a report to view.");
+    return;
+  }
+
   try {
     const response = await fetch(
-      `/view?file=reports/report_11-10-2024_17:36:33_H4WVbD6xSOijV-bNFBCAGA.json&action=download`
+      `/view?file=reports/${report}&action=download`
     );
     if (!response.ok) {
       throw new Error(response);
@@ -191,7 +222,7 @@ const downloadHandler = async () => {
     const link = document.createElement("a");
     link.href = url;
 
-    link.download = "report_11-10-2024_17:36:33_H4WVbD6xSOijV-bNFBCAGA.csv";
+    link.download = report.split(".json")[0] + ".csv";
 
     document.body.appendChild(link);
 
@@ -202,5 +233,29 @@ const downloadHandler = async () => {
     window.URL.revokeObjectURL(url);
   } catch (err) {
     throw err;
+  }
+};
+
+let checkedBoxes = [];
+
+const handleSelectFilesCheckboxChange = (selectedCheckbox) => {
+  if (selectedCheckbox.checked) {
+    if (checkedBoxes.length >= 2) {
+      // Uncheck the first selected checkbox
+      const firstChecked = checkedBoxes.shift();
+      firstChecked.checked = false; // Uncheck it
+    }
+    // Add the newly checked checkbox to the array
+    checkedBoxes.push(selectedCheckbox);
+  } else {
+    // If the checkbox is being unchecked, remove it from the array
+    checkedBoxes = checkedBoxes.filter((cb) => cb !== selectedCheckbox);
+  }
+
+  const genReportButton = document.getElementById("generate-report");
+  if (checkedBoxes.length === 2) {
+    genReportButton.disabled = false;
+  } else {
+    genReportButton.disabled = true;
   }
 };
