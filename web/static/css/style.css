@@ -126,3 +126,12 @@ h3 {
     background-color: #4CAF50; /* Change background color when checked */
     color: white; /* Change text color when checked */
 }
+
+
+.table-responsive {
+    max-height: 400px; /* Set the max height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    border: 1px solid #dee2e6; /* Add border for better visibility */
+    border-radius: 0.25rem; /* Match Bootstrap's border radius */
+}

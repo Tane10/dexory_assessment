@@ -16,22 +16,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/style.css" />
 
-    <!-- <style>
-      /* Additional styles for checkbox dropdown */
-      .dropdown-menu {
-        max-height: 200px;
-        overflow-y: auto;
-      }
 
-      .checkbox-container {
-        display: flex;
-        align-items: center;
-      }
-
-      .checkbox-container input {
-        margin-right: 8px;
-      }
-    </style> -->
   </head>
   <body>
     <div class="container mt-4">
@@ -108,8 +93,10 @@
                       <label class="checkbox-container">
                           <input
                           type="checkbox"
-                          class="item-checkbox"
-                          value="{{ .Name }}"/>
+                          class="report-item-input"
+                          value="{{ .Name }}"
+                          onclick="handleReportCheckboxChange(this)"
+                          />
                            {{ .Name }}
                       </label>
                   </li>
@@ -120,10 +107,13 @@
     </p>
         </div>
         <div class="mb-8">
-            <button class="btn btn-primary" type="button" aria-expanded="false" >
+            <button class="btn btn-primary" type="button" aria-expanded="false"  onclick="reportDisplayHandler()">
                   View a report
             </button>
         </p>
+        <div class="container mt-4" id="reportTableParent" hidden>
+            <div id="reportTableContainer" class="mt-4 .table-responsive"></div>
+        </div>
         </div>
         {{ else }}
         <p>No file uploaded yet.</p>

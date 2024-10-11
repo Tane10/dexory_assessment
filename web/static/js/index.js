@@ -43,6 +43,17 @@ const fileUploadHandler = async (event) => {
   }
 };
 
+const handleReportCheckboxChange = (selectedCheckbox) => {
+  // Get all checkboxes
+  const checkboxes = document.querySelectorAll(".report-item-input");
+  // Loop through each checkbox and uncheck if it's not the selected one
+  checkboxes.forEach((checkbox) => {
+    if (checkbox !== selectedCheckbox) {
+      checkbox.checked = false; // Uncheck the checkbox
+    }
+  });
+};
+
 const generateReportHandler = async (event) => {
   if (event) event.preventDefault();
   const checkedBoxes = document.querySelectorAll(".item-checkbox:checked");
@@ -76,4 +87,86 @@ const generateReportHandler = async (event) => {
   }
 };
 
-// document.addEventListener("DOMContentLoaded", () => {});
+const reportDisplayHandler = async () => {
+  const selectedReport = document.querySelectorAll(".report-item-input");
+
+  let report = "";
+  selectedReport.forEach((r) => {
+    if (r.checked) {
+      report = r.value;
+    }
+  });
+
+  if (selectedReport.length == 0) {
+    alert("Please select a report to view.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`/view?file=reports/${report}`);
+    if (!response.ok) {
+      throw new Error(response);
+    }
+
+    const data = await response.json();
+
+    const table = document.createElement("table");
+    table.className = "table table-bordered"; // Use Bootstrap classes for styling
+
+    const thead = document.createElement("thead");
+
+    const headerRow = document.createElement("tr");
+    headerRow.innerHTML = `
+        <th>Location</th>
+        <th>Scanned</th>
+        <th>Occupied</th>
+        <th>Expected Barcodes</th>
+        <th>Detected Barcodes</th>
+        <th>Outcome</th>
+    `;
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create table body
+    const tbody = document.createElement("tbody");
+    data.forEach((item) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+            <td>${item.Location}</td>
+            <td>${item.Scanned ? "Yes" : "No"}</td>
+            <td>${item.Occupied ? "Yes" : "No"}</td>
+            <td>${
+              item.ExpectedItems
+                ? item.ExpectedItems.split(", ")
+                    .map((barcode) => barcode.trim())
+                    .join(", ")
+                : ""
+            }</td>
+            <td>${
+              item.DetectedBarcodes
+                ? item.DetectedBarcodes.split(", ")
+                    .map((barcode) => barcode.trim())
+                    .join(", ")
+                : ""
+            }</td>
+            <td>${item.Outcome}</td>
+        `;
+      tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+
+    // Clear previous table and append the new table to the container
+    const reportTableContainer = document.getElementById(
+      "reportTableContainer"
+    );
+
+    const reportContainerParent = document.getElementById("reportTableParent");
+    reportContainerParent.hidden = true;
+    reportTableContainer.innerHTML = ""; // Clear previous content
+    reportTableContainer.appendChild(table);
+    reportContainerParent.hidden = false;
+  } catch (err) {
+    console.error(err);
+    return;
+  }
+};

@@ -14,7 +14,7 @@ func main() {
 
 	routes.UploadRoutes()
 	routes.HomeRoutes()
-	// routes.ViewRoutes()
+	routes.ViewRoutes()
 	routes.ReportRoutes()
 
 	// Start the server
