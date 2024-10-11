@@ -1,5 +1,4 @@
-TODO:[x] report
-TODO:[x] report
-TODO:[x] report
-TODO:[x] upload
-TODO:[x] report -> currently returns json report
+TODO:fix select items
+TODO: link up generate reports tp FE
+TODO: show report in HTML table when user views report
+TODO: add download file as ? functionality

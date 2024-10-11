@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/tane10/dexory_assignment/api"
 	"html/template"
 	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/tane10/dexory_assignment/api"
 )
 
 var templates = template.Must(template.ParseFiles("web/templates/index.html"))
@@ -20,6 +22,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var files []FileData
+	var reports []FileData
 
 	cwd, wdErr := os.Getwd()
 
@@ -38,7 +41,12 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		// Check if it's a file (not a directory)
 		if !d.IsDir() {
-			files = append(files, FileData{Name: d.Name(), Dir: path}) // store the file path
+			if !strings.Contains(path, "reports") {
+				files = append(files, FileData{Name: d.Name(), Dir: path}) // store the file path
+			} else {
+				reports = append(reports, FileData{Name: d.Name(), Dir: path}) // store the file path
+			}
+
 		}
 		return nil
 
@@ -46,9 +54,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	data := struct {
-		Files *[]FileData
+		Files   *[]FileData
+		Reports *[]FileData
 	}{
-		Files: &files,
+		Files:   &files,
+		Reports: &reports,
 	}
 
 	templateErr := templates.Execute(w, data)

@@ -16,7 +16,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/style.css" />
 
-    <style>
+    <!-- <style>
       /* Additional styles for checkbox dropdown */
       .dropdown-menu {
         max-height: 200px;
@@ -31,7 +31,7 @@
       .checkbox-container input {
         margin-right: 8px;
       }
-    </style>
+    </style> -->
   </head>
   <body>
     <div class="container mt-4">
@@ -47,65 +47,98 @@
             id="file"
             class="form-control"
             required
+            accept=".csv, .json"
           />
         </div>
-        <button type="submit" class="btn btn-primary">Upload File</button>
+        <button type="submit" class="btn btn-primary" onclick="fileUploadHandler(event)">Upload File</button>
       </form>
 
       {{ if .Files }}
       <div class="mb-4">
         <h3>Select Files to Compare</h3>
-        <div class="dropdown">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
+        <div class="mb-8">
+          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiles" aria-expanded="false" aria-controls="collapseFiles">
             Select Items
           </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            {{ range .Files }}
-            <!-- Assuming .Files is a slice of items in your Go template -->
-            <li>
-              <label class="dropdown-item checkbox-container">
-                <input
-                  type="checkbox"
-                  class="item-checkbox"
-                  value="{{ . }}"
-                  onchange="limitCheckboxSelection(this)"
-                />
-                {{ . }}
-              </label>
-            </li>
-            {{ end }}
-          </ul>
+        </p>
+        <div class="collapse" id="collapseFiles">
+          <div class="card card-body">
+            <ul class="list-group list-group-flush">
+                {{range .Files}}
+                <li class="list-group-item">
+                    <label class="checkbox-container">
+                        <input
+                        type="checkbox"
+                        class="item-checkbox"
+                        value="{{ .Name }}"/>
+                         {{ .Name }}
+                    </label>
+                </li>
+                {{end}}
+            </ul>
+          </div>
+        </div>
         </div>
       </div>
-
       <div class="mb-4">
         <!-- Button to compare two files -->
-        <form action="/compare" method="POST">
-          <button type="submit" id="generate-report" class="btn btn-success">
+        <form id="generate-report-form">
+          <button type="submit" id="generate-report" class="btn btn-success" onclick="generateReportHandler(event)">
             Click to Generate Reports
           </button>
         </form>
       </div>
-
-      <div class="mb-4">
-        <h3>Report Contents</h3>
-        <p>View Report here.</p>
-      </div>
-
       {{ else }}
       <p>No file uploaded yet.</p>
       {{ end }}
 
-      <!-- Button to download a file -->
-      <form action="/download" method="GET">
+      {{ if .Reports}}
+      <div class="mb-4">
+        <h3>Reports</h3>
+        <div class="mb-8">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReports" aria-expanded="false" aria-controls="collapseReports">
+              Select a report
+            </button>
+          </p>
+          <div class="collapse" id="collapseReports">
+            <div class="card card-body">
+              <ul class="list-group list-group-flush">
+                  {{range .Reports}}
+                  <li class="list-group-item">
+                      <label class="checkbox-container">
+                          <input
+                          type="checkbox"
+                          class="item-checkbox"
+                          value="{{ .Name }}"/>
+                           {{ .Name }}
+                      </label>
+                  </li>
+                  {{end}}
+              </ul>
+            </div>
+        </div>
+    </p>
+        </div>
+        <div class="mb-8">
+            <button class="btn btn-primary" type="button" aria-expanded="false" >
+                  View a report
+            </button>
+        </p>
+        </div>
+        {{ else }}
+        <p>No file uploaded yet.</p>
+         {{ end }}
+      </div>
+
+      
+    <div class="mb-8"> 
+        <form action="/download" method="GET">
         <button type="submit" class="btn btn-info">Download File</button>
       </form>
+
+    </div>
+      <!-- Button to download a file -->
+     
     </div>
 
     <script

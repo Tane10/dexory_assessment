@@ -5,7 +5,7 @@ Accept: application/json
 ###
 
 # Test the POST /upload route
-POST http://localhost:8080/upload?type=json
+POST http://localhost:8080/upload?type=file
 Content-Type: multipart/form-data; boundary=----boundary
 
 ------boundary
