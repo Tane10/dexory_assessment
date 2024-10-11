@@ -5,12 +5,13 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"github.com/tane10/dexory_assignment/utils"
 	"io"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/tane10/dexory_assignment/utils"
 
 	"github.com/google/uuid"
 	"github.com/tane10/dexory_assignment/api"
@@ -159,28 +160,28 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func genReport(csvData map[string]string, jsonLocation []models.Locations) []map[string]string {
-	var report []map[string]string
+func genReport(csvData map[string]string, jsonLocation []models.Locations) []models.Report {
+	var report []models.Report
 
 	for _, loc := range jsonLocation {
-		result := map[string]string{
-			"Location":         loc.Name,
-			"Scanned":          fmt.Sprintf("%v", loc.Scanned),
-			"Occupied":         fmt.Sprintf("%v", loc.Occupied),
-			"ExpectedItems":    csvData[loc.Name],
-			"DetectedBarcodes": strings.Join(loc.DetectedBarcodes, ", "),
+		result := models.Report{
+			Location:         loc.Name,
+			Scanned:          loc.Scanned,
+			Occupied:         loc.Occupied,
+			ExpectedItems:    csvData[loc.Name],
+			DetectedBarcodes: strings.Join(loc.DetectedBarcodes, ", "),
 		}
 		// Description of outcome
 		if !loc.Occupied && csvData[loc.Name] == "" {
-			result["Outcome"] = "The location was empty, as expected"
+			result.Outcome = "The location was empty, as expected"
 		} else if !loc.Occupied && csvData[loc.Name] != "" {
-			result["Outcome"] = "The location was empty, but it should have been occupied"
+			result.Outcome = "The location was empty, but it should have been occupied"
 		} else if loc.Occupied && csvData[loc.Name] == strings.Join(loc.DetectedBarcodes, ", ") {
-			result["Outcome"] = "The location was occupied by the expected items"
+			result.Outcome = "The location was occupied by the expected items"
 		} else if loc.Occupied && csvData[loc.Name] != strings.Join(loc.DetectedBarcodes, ", ") {
-			result["Outcome"] = "The location was occupied by the wrong items"
+			result.Outcome = "The location was occupied by the wrong items"
 		} else if loc.Occupied && len(loc.DetectedBarcodes) == 0 {
-			result["Outcome"] = "The location was occupied, but no barcode could be identified"
+			result.Outcome = "The location was occupied, but no barcode could be identified"
 		}
 
 		report = append(report, result)

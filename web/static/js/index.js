@@ -170,3 +170,16 @@ const reportDisplayHandler = async () => {
     return;
   }
 };
+
+const downloadHandler = async () => {
+  try {
+    const response = await fetch(
+      `/view?file=reports/report_10-10-2024_20:17:19_kPm0bHOaQdOkGOFHkDfmyQ.json&action=download`
+    );
+    if (!response.ok) {
+      throw new Error(response);
+    }
+  } catch (err) {
+    throw err;
+  }
+};
