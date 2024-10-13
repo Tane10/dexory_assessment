@@ -83,18 +83,18 @@ const generateReportHandler = async (event) => {
       }),
     });
 
-    if (!generateReportResp.ok) {
+    if (generateReportResp.ok) {
+      const reportData = await generateReportResp.json();
+      alert(
+        `Report: ${reportData.filename} has been generated! \nReport can be found if you click Select a Report.`
+      );
+      window.location.reload();
+    } else {
       console.error("Failed to generate the report");
     }
   } catch (error) {
     console.error(error);
   }
-
-  const reportData = await generateReportResp.json();
-  alert(
-    `Report: ${reportData.filename} has been generated! \nReport can be found if you click Select a Report.`
-  );
-  window.location.reload();
 };
 
 const reportDisplayHandler = async () => {
