@@ -25,3 +25,7 @@ type ReportHandlerResp struct {
 	Report   *[]Report `json:"report"`
 	Filename string    `json:"filename"`
 }
+
+type ReportRequestBody struct {
+	File []string `json:"files"`
+}

@@ -151,20 +151,20 @@ func TestUploadHandler(t *testing.T) {
 			}
 
 			// Create a ResponseRecorder to capture the response
-			rr := httptest.NewRecorder()
+			reqRecorder := httptest.NewRecorder()
 
 			// Call the handler
 			handler := http.HandlerFunc(UploadHandler)
-			handler.ServeHTTP(rr, req)
+			handler.ServeHTTP(reqRecorder, req)
 
 			// Check the status code
-			if rr.Code != scenario.expectedCode {
-				t.Errorf("Expected status code %d, got %d", scenario.expectedCode, rr.Code)
+			if reqRecorder.Code != scenario.expectedCode {
+				t.Errorf("Expected status code %d, got %d", scenario.expectedCode, reqRecorder.Code)
 			}
 
 			// Check the response body
-			if rr.Body.String() != scenario.expectedBody {
-				t.Errorf("Expected body %q, got %q", scenario.expectedBody, rr.Body.String())
+			if reqRecorder.Body.String() != scenario.expectedBody {
+				t.Errorf("Expected body %q, got %q", scenario.expectedBody, reqRecorder.Body.String())
 			}
 		})
 	}

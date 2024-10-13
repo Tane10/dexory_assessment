@@ -1,0 +1,26 @@
+[
+  {
+    "fish": "ZA001A",
+    "chips": true,
+    "occupied": true,
+    "detected_barcodes": ["DX9850004338"]
+  },
+  {
+    "name": "ZA002A",
+    "cat": true,
+    "occupied": true,
+    "detected_barcodes": ["DX9850004338", "DX9850004348"]
+  },
+  {
+    "name": "ZA003A",
+    "dog": true,
+    "occupied": false,
+    "detected_barcodes": []
+  },
+  {
+    "name": "ZA004A",
+    "scanned": true,
+    "puppy": true,
+    "mow": ["DX9850004348"]
+  }
+]

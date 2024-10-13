@@ -24,7 +24,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	var files []models.FileData
 	var reports []models.FileData
 
-	cwd, wdErr := utils.GetWorkingDirectory(w)
+	cwd, wdErr := utils.GetWorkingDirectory(&w)
 	if wdErr != nil {
 		// Error handling is already done in the function.
 		return

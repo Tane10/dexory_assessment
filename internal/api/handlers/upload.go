@@ -14,7 +14,7 @@ import (
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	//TODO: 2024/10/13 09:20:45 http: superfluous response.WriteHeader call from github.com/tane10/dexory_assignment/internal/api/handlers.UploadHandler (upload.go:88)
 
-	cwd, wdErr := utils.GetWorkingDirectory(w)
+	cwd, wdErr := utils.GetWorkingDirectory(&w)
 	if wdErr != nil {
 		return
 	}

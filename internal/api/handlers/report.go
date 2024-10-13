@@ -24,9 +24,7 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var reqBody struct {
-		File []string `json:"files"`
-	}
+	var reqBody *models.ReportRequestBody
 
 	err := json.NewDecoder(r.Body).Decode(&reqBody)
 
@@ -36,24 +34,40 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(reqBody.File) != 2 {
-		http.Error(w, api.NewCustomError("Only supply 2 files at a time", ""), http.StatusBadRequest)
+		http.Error(w, api.NewCustomError("Please supply 2 files, 1 JSON file and 1 CSV file.", ""), http.StatusBadRequest)
 		return
 	}
 
 	var jsonFilename string
 	var csvFilename string
 
-	for _, file := range reqBody.File {
-		if strings.HasSuffix(strings.ToLower(file), ".json") {
-			jsonFilename = file
-		}
+	jsonFileCount := 0
+	csvFileCount := 0
 
-		if strings.HasSuffix(strings.ToLower(file), ".csv") {
+	for _, file := range reqBody.File {
+		file = strings.ToLower(file)
+
+		switch {
+		case strings.HasSuffix(file, ".json"):
+			jsonFilename = file
+			jsonFileCount++
+		case strings.HasSuffix(file, ".csv"):
 			csvFilename = file
+			csvFileCount++
 		}
 	}
 
-	cwd, wdErr := utils.GetWorkingDirectory(w)
+	if jsonFileCount != 1 && csvFileCount != 1 {
+		http.Error(w, api.NewCustomError("Please supply 2 files, 1 JSON file and 1 CSV file.", ""),
+			http.StatusBadRequest)
+		return
+
+	}
+
+	// TODO: FIX this so we can upload using test_data dir for tests no data dir
+	cwd, _ := utils.HandleTestReportGen(&w)
+
+	cwd, wdErr := utils.GetWorkingDirectory(&w)
 	if wdErr != nil {
 		return
 	}
@@ -83,7 +97,7 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 	csvReader := csv.NewReader(csvFile)
 
 	//Parse JSON in chunks
-	var jsonLocations []models.Locations
+	var jsonLocations *[]models.Locations
 	if err := json.NewDecoder(jsonFile).Decode(&jsonLocations); err != nil {
 		http.Error(w,
 			api.NewCustomError("Error reading JSON file", err.Error()),
@@ -140,7 +154,7 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 	reportJSON, err := json.MarshalIndent(report, "", " ")
 	if err != nil {
 		http.Error(w,
-			api.NewCustomError("Failed to formate report", err.Error()),
+			api.NewCustomError("Failed to format report", err.Error()),
 			http.StatusInternalServerError)
 		return
 	}
@@ -157,16 +171,16 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(&models.ReportHandlerResp{
-		Report:   &report,
+		Report:   report,
 		Filename: reportFilename,
 	})
 
 }
 
-func genReport(csvData map[string]string, jsonLocation []models.Locations) []models.Report {
+func genReport(csvData map[string]string, jsonLocation *[]models.Locations) *[]models.Report {
 	var report []models.Report
 
-	for _, loc := range jsonLocation {
+	for _, loc := range *jsonLocation {
 		result := models.Report{
 			Location:         loc.Name,
 			Scanned:          loc.Scanned,
@@ -190,6 +204,6 @@ func genReport(csvData map[string]string, jsonLocation []models.Locations) []mod
 		report = append(report, result)
 	}
 
-	return report
+	return &report
 
 }

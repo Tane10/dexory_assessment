@@ -99,7 +99,7 @@ func ViewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cwd, wdErr := utils.GetWorkingDirectory(w)
+	cwd, wdErr := utils.GetWorkingDirectory(&w)
 	if wdErr != nil {
 		return
 	}
