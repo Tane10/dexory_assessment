@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -13,9 +14,12 @@ import (
 	"github.com/tane10/dexory_assignment/utils"
 )
 
-var templates = template.Must(template.ParseFiles("web/templates/index.html"))
-
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	var templates *template.Template
+
+	if os.Getenv("TESTING") != "true" {
+		templates = template.Must(template.ParseFiles("web/templates/index.html"))
+	}
 
 	var files []models.FileData
 	var reports []models.FileData

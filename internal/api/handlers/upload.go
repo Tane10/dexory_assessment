@@ -2,17 +2,17 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/tane10/dexory_assignment/utils"
 	"io"
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/tane10/dexory_assignment/utils"
-
 	"github.com/tane10/dexory_assignment/internal/api"
 )
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
+	//TODO: 2024/10/13 09:20:45 http: superfluous response.WriteHeader call from github.com/tane10/dexory_assignment/internal/api/handlers.UploadHandler (upload.go:88)
 
 	cwd, wdErr := utils.GetWorkingDirectory(w)
 	if wdErr != nil {
@@ -31,8 +31,18 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	contentType := r.Header.Get("Content-Type")
+
+	if !strings.Contains(contentType, "multipart/form-data; boundary=") {
+		http.Error(w,
+			api.NewCustomError("Unsupported Content-Type", ""),
+			http.StatusUnsupportedMediaType)
+		return
+	}
+
 	// bitwise left shit operation => 10 * 2^20 => 10485760
 	err := r.ParseMultipartForm(10 << 20) // 10MB limit
+
 	if err != nil {
 		http.Error(w,
 			api.NewCustomError("File size exceeds 10MB limit", err.Error()),
@@ -40,18 +50,13 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	contentType := r.Header.Get("Content-Type")
-
-	if contentType != "multipart/form-data" {
-		http.Error(w, api.NewCustomError("Unsupported Content-Type", ""), http.StatusUnsupportedMediaType)
-	}
-
 	file, fileHeader, err := r.FormFile("file")
 
 	if !strings.HasSuffix(strings.ToLower(fileHeader.Filename), ".json") &&
 		!strings.HasSuffix(strings.ToLower(fileHeader.Filename), ".csv") {
-		http.Error(w, api.NewCustomError("Unsupported file type, only json or csv is supported.", ""), http.StatusBadRequest)
-
+		http.Error(w,
+			api.NewCustomError("Unsupported file type, only json or csv is supported.", ""),
+			http.StatusBadRequest)
 		file.Close()
 		return
 	}
