@@ -24,25 +24,14 @@ const fileUploadHandler = async (event) => {
     });
 
     if (response.ok) {
-      //TODO add message when upload done
-      // const result = await response.text(); // Get the response as text (or JSON if you prefer)
-      // console.log(result);
-      // document.getElementById(
-      //   "message"
-      // ).innerText = `Upload successful: ${result}`;
+      alert(`File: ${file.name} has been uploaded! \nFile can be found if you click Select Files.`)
+      window.location.reload()
     }
-
-    // else {
-    //   const errorText = await response.text();
-    //   document.getElementById(
-    //     "message"
-    //   ).innerText = `Upload failed: ${errorText}`;
-    // }
+   
   } catch (error) {
     console.error(error);
   }
 
-  window.location.reload();
 };
 
 const handleReportCheckboxChange = (selectedCheckbox) => {
@@ -74,30 +63,12 @@ const handleReportCheckboxChange = (selectedCheckbox) => {
 };
 
 const generateReportHandler = async (event) => {
-  const reportMessageEl = document.getElementById("report-message");
-  reportMessageEl.hidden = true;
-
   if (event) event.preventDefault();
   const checkedBoxes = document.querySelectorAll(".item-checkbox:checked");
   const selectedFiles = Array.from(checkedBoxes).map((cb) => cb.value);
 
-  console.log(selectedFiles);
-
-  if (selectedFiles.length != 2) {
+  if (selectedFiles.length !== 2) {
     alert("Please select 2 files");
-    return;
-  }
-
-  let jsonCount = 0;
-  let csvCount = 0;
-
-  for (const sf of selectedFiles) {
-    if (sf.match(".json")) jsonCount++;
-    if (sf.match(".csv")) csvCount++;
-  }
-
-  if (jsonCount != 1 && csvCount != 1) {
-    alert("Please select 1 Json file and 1 CSV file");
     return;
   }
 
@@ -111,19 +82,18 @@ const generateReportHandler = async (event) => {
         files: selectedFiles,
       }),
     });
+
     if (!generateReportResp.ok) {
-      throw new Error("Failed to generate the report");
+       console.error("Failed to generate the report");
+    } else{
+      const reportData = await generateReportResp.json()
+      alert(`Report: ${reportData.filename} has been generated! \nReport can be found if you click Select a Report.`)
+      window.location.reload()
     }
-    const reportData = await generateReportResp.json();
-    console.log(reportData);
-    reportMessageEl.hidden = false;
   } catch (error) {
     console.error(error);
-    return;
   }
-  //TODO: find a more pleasing way to do this as is jarring when generating a report
 
-  window.location.reload();
 };
 
 const reportDisplayHandler = async () => {
@@ -136,7 +106,7 @@ const reportDisplayHandler = async () => {
     }
   });
 
-  if (selectedReport.length == 0) {
+  if (selectedReport.length === 0) {
     alert("Please select a report to view.");
     return;
   }
@@ -222,7 +192,7 @@ const downloadHandler = async () => {
     }
   });
 
-  if (selectedReport.length == 0) {
+  if (selectedReport.length === 0) {
     alert("Please select a report to view.");
     return;
   }
@@ -271,10 +241,15 @@ const handleSelectFilesCheckboxChange = (selectedCheckbox) => {
     checkedBoxes = checkedBoxes.filter((cb) => cb !== selectedCheckbox);
   }
 
-  const genReportButton = document.getElementById("generate-report");
-  if (checkedBoxes.length === 2) {
-    genReportButton.disabled = false;
-  } else {
-    genReportButton.disabled = true;
+  let jsonCount = 0;
+  let csvCount = 0;
+
+  for (const cb of checkedBoxes) {
+    if (cb.value.match(".json")) jsonCount++;
+    if (cb.value.match(".csv")) csvCount++;
   }
+
+  const genReportButton = document.getElementById("generate-report");
+
+  genReportButton.disabled = !(checkedBoxes.length === 2 && (jsonCount === 1 && csvCount === 1));
 };

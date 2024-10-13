@@ -20,3 +20,8 @@ type FileData struct {
 	Name string `json:"name"`
 	Dir  string `json:"dir"`
 }
+
+type ReportHandlerResp struct {
+	Report   *[]Report `json:"report"`
+	Filename string    `json:"filename"`
+}

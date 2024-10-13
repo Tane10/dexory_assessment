@@ -156,7 +156,10 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 	// Output the report
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(report)
+	json.NewEncoder(w).Encode(&models.ReportHandlerResp{
+		Report:   &report,
+		Filename: reportFilename,
+	})
 
 }
 

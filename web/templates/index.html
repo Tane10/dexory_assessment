@@ -41,10 +41,10 @@
       {{ if .Files }}
       <div class="mb-4">
         <h3>Select Files to Compare</h3>
-        <div class="mb-4"><span>Please Select a CSV file and a JSON file to generate report</span></div>
+        <div class="mb-4"><p class="fw-semibold">Please Select 1 CSV file and 1 JSON file to generate report</p></div>
         <div class="mb-8">
           <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiles" aria-expanded="false" aria-controls="collapseFiles">
-            Select Items
+            Select Files
           </button>
         </p>
         <div class="collapse" id="collapseFiles">
@@ -69,10 +69,9 @@
         </div>
       </div>
       <div class="mb-4">
-        <span id="report-message" hidden>Report successfully generated</span>
         <!-- Button to compare two files -->
         <form id="generate-report-form">
-          <button type="submit" id="generate-report" class="btn btn-success" onclick="generateReportHandler(event)" disabled>
+          <button type="submit" id="generate-report" class="btn btn-success" onclick="generateReportHandler()" disabled>
             Click to Generate Reports
           </button>
         </form>
@@ -86,7 +85,7 @@
         <h3>Reports</h3>
         <div class="mb-8">
             <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReports" aria-expanded="false" aria-controls="collapseReports">
-              Select a report
+              Select a Report
             </button>
           </p>
           <div class="collapse" id="collapseReports">
@@ -112,7 +111,7 @@
         </div>
         <div class="mb-8">
             <button class="btn btn-primary" id="view-report-btn" type="button" aria-expanded="false"  onclick="reportDisplayHandler()" disabled>
-                  View a report
+                  View a Report
             </button>
         </p>
         <div class="container mt-4" id="reportTableParent" hidden>
