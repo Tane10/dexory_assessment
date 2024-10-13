@@ -11,10 +11,106 @@ import (
 	"testing"
 )
 
+var exampleReport = []models.Report{
+	{
+		Location:         "ZA001A",
+		Scanned:          true,
+		Occupied:         true,
+		ExpectedItems:    "DX9850004338",
+		DetectedBarcodes: "DX9850004338",
+		Outcome:          "The location was occupied by the expected items",
+	},
+	{
+		Location:         "ZA002A",
+		Scanned:          true,
+		Occupied:         true,
+		ExpectedItems:    "",
+		DetectedBarcodes: "DX9850004338, DX9850004348",
+		Outcome:          "The location was occupied by an item, but should have been empty",
+	},
+	{
+		Location:         "ZA003A",
+		Scanned:          true,
+		Occupied:         false,
+		ExpectedItems:    "",
+		DetectedBarcodes: "",
+		Outcome:          "The location was empty, as expected",
+	},
+	{
+		Location:         "ZA004A",
+		Scanned:          true,
+		Occupied:         true,
+		ExpectedItems:    "DX9850004348",
+		DetectedBarcodes: "DX9850004348",
+		Outcome:          "The location was occupied by the expected items",
+	},
+	{
+		Location:         "ZA005A",
+		Scanned:          true,
+		Occupied:         false,
+		ExpectedItems:    "",
+		DetectedBarcodes: "",
+		Outcome:          "The location was empty, as expected",
+	},
+	{
+		Location:         "ZA006A",
+		Scanned:          true,
+		Occupied:         false,
+		ExpectedItems:    "",
+		DetectedBarcodes: "",
+		Outcome:          "The location was empty, as expected",
+	},
+	{
+		Location:         "ZA007A",
+		Scanned:          true,
+		Occupied:         false,
+		ExpectedItems:    "",
+		DetectedBarcodes: "",
+		Outcome:          "The location was empty, as expected",
+	},
+	{
+		Location:         "ZA008A",
+		Scanned:          true,
+		Occupied:         false,
+		ExpectedItems:    "",
+		DetectedBarcodes: "",
+		Outcome:          "The location was empty, as expected",
+	},
+	{
+		Location:         "ZA009A",
+		Scanned:          true,
+		Occupied:         false,
+		ExpectedItems:    "",
+		DetectedBarcodes: "",
+		Outcome:          "The location was empty, as expected",
+	},
+	{
+		Location:         "ZA010A",
+		Scanned:          true,
+		Occupied:         false,
+		ExpectedItems:    "",
+		DetectedBarcodes: "",
+		Outcome:          "The location was empty, as expected",
+	},
+	{
+		Location:         "ZA011A",
+		Scanned:          true,
+		Occupied:         true,
+		ExpectedItems:    "",
+		DetectedBarcodes: "",
+		Outcome:          "The location was occupied by an item, but should have been empty",
+	},
+}
+
 // Post file:[file_1, file_2]
 func TestReportHandler(t *testing.T) {
 	os.Setenv("TESTING", "true")
 	defer os.Unsetenv("TESTING")
+
+	jsonExampleReport, err := json.Marshal(exampleReport)
+	if err != nil {
+		log.Fatal("Failed to marshal example report")
+	}
 
 	scenarios := []struct {
 		name         string
@@ -50,13 +146,13 @@ func TestReportHandler(t *testing.T) {
 			expectedBody: "Please supply 2 files, 1 JSON file and 1 CSV file.: \n",
 		},
 		{
-			name:   "Should return bad request when 2 files supplied are not 1 JSON and 1 CSV",
+			name:   "Should return a valid report",
 			method: http.MethodPost,
 			body: &models.ReportRequestBody{
-				File: []string{"mini-cust_test.csv", "robot_bad_scan_test.json"},
+				File: []string{"mini-cust_test.csv", "robot_scan_test.json"},
 			},
-			expectedCode: http.StatusInternalServerError,
-			expectedBody: "Please supply 2 files, 1 JSON file and 1 CSV file.: \n",
+			expectedCode: http.StatusOK,
+			expectedBody: string(jsonExampleReport),
 		},
 	}
 
@@ -81,10 +177,34 @@ func TestReportHandler(t *testing.T) {
 				t.Errorf("Expected status code %d, got %d", scenario.expectedCode, reqRecorder.Code)
 			}
 
-			// Check the response body
-			if reqRecorder.Body.String() != scenario.expectedBody {
-				t.Errorf("Expected body %q, got %q", scenario.expectedBody, reqRecorder.Body.String())
+			if scenario.name != "Should return a valid report" {
+				if reqRecorder.Body.String() != scenario.expectedBody {
+					t.Errorf("Expected body %q, got %q", scenario.expectedBody, reqRecorder.Body.String())
+				}
+			} else {
+				var expectedRespBody []models.Report
+				err = json.Unmarshal([]byte(scenario.expectedBody), &expectedRespBody)
+				if err != nil {
+					t.Fatalf("Failed to unmarshal expected JSON string: %v", err)
+				}
+
+				var actualRespBody models.ReportHandlerResp
+
+				err := json.NewDecoder(reqRecorder.Body).Decode(&actualRespBody)
+				if err != nil {
+					t.Fatalf("Failed to decode JSON: %v", err)
+				}
+
+				actualReports := *actualRespBody.Report
+
+				for i := range expectedRespBody {
+					if actualReports[i] != expectedRespBody[i] {
+						t.Errorf("Expected report %v, got %v", expectedRespBody[i], actualReports[i])
+					}
+				}
+
 			}
+
 		})
 	}
 }

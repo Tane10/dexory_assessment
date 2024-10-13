@@ -64,15 +64,12 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	// TODO: FIX this so we can upload using test_data dir for tests no data dir
-	cwd, _ := utils.HandleTestReportGen(&w)
-
-	cwd, wdErr := utils.GetWorkingDirectory(&w)
+	cwd, wdErr := utils.ReportDataRouteHandler(&w)
 	if wdErr != nil {
 		return
 	}
 
-	jsonFile, err := os.Open(fmt.Sprintf("%s/data/%s", cwd, jsonFilename))
+	jsonFile, err := os.Open(fmt.Sprintf("%s/%s", cwd, jsonFilename))
 	if err != nil {
 		http.Error(w,
 			api.NewCustomError("Error opening JSON file", err.Error()),
@@ -83,7 +80,7 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 	defer jsonFile.Close()
 
 	// opens file, returns *os.File -> read with new reader, can read line-line or in chunks
-	csvFile, err := os.Open(fmt.Sprintf("%s/data/%s", cwd, csvFilename))
+	csvFile, err := os.Open(fmt.Sprintf("%s/%s", cwd, csvFilename))
 	if err != nil {
 		http.Error(w,
 			api.NewCustomError("Error opening CSV file", err.Error()),
@@ -140,7 +137,7 @@ func ReportHandler(w http.ResponseWriter, r *http.Request) {
 
 	reportFilename := fmt.Sprintf("report_%s_%s.json", ts, uuidStr)
 
-	reportFile, err := os.Create(fmt.Sprintf("%s/data/reports/%s", cwd, reportFilename))
+	reportFile, err := os.Create(fmt.Sprintf("%s/reports/%s", cwd, reportFilename))
 	if err != nil {
 		http.Error(w,
 			api.NewCustomError("Failed to create report", err.Error()),
@@ -181,6 +178,9 @@ func genReport(csvData map[string]string, jsonLocation *[]models.Locations) *[]m
 	var report []models.Report
 
 	for _, loc := range *jsonLocation {
+		expectedItem := csvData[loc.Name]
+		detectedItems := strings.Join(loc.DetectedBarcodes, ", ")
+
 		result := models.Report{
 			Location:         loc.Name,
 			Scanned:          loc.Scanned,
@@ -188,17 +188,28 @@ func genReport(csvData map[string]string, jsonLocation *[]models.Locations) *[]m
 			ExpectedItems:    csvData[loc.Name],
 			DetectedBarcodes: strings.Join(loc.DetectedBarcodes, ", "),
 		}
-		// Description of outcome
-		if !loc.Occupied && csvData[loc.Name] == "" {
-			result.Outcome = "The location was empty, as expected"
-		} else if !loc.Occupied && csvData[loc.Name] != "" {
-			result.Outcome = "The location was empty, but it should have been occupied"
-		} else if loc.Occupied && csvData[loc.Name] == strings.Join(loc.DetectedBarcodes, ", ") {
-			result.Outcome = "The location was occupied by the expected items"
-		} else if loc.Occupied && csvData[loc.Name] != strings.Join(loc.DetectedBarcodes, ", ") {
+
+		switch {
+		case loc.Occupied && expectedItem == "":
+			result.Outcome = "The location was occupied by an item, but should have been empty"
+
+		case loc.Occupied && expectedItem != detectedItems && detectedItems != "":
 			result.Outcome = "The location was occupied by the wrong items"
-		} else if loc.Occupied && len(loc.DetectedBarcodes) == 0 {
+
+		case loc.Occupied && expectedItem == detectedItems:
+			result.Outcome = "The location was occupied by the expected items"
+
+		case !loc.Occupied && expectedItem != "":
+			result.Outcome = "The location was empty, but it should have been occupied"
+
+		case !loc.Occupied && expectedItem == "":
+			result.Outcome = "The location was empty, as expected"
+
+		case loc.Occupied && len(loc.DetectedBarcodes) == 0:
 			result.Outcome = "The location was occupied, but no barcode could be identified"
+
+		default:
+			result.Outcome = "Unexpected condition"
 		}
 
 		report = append(report, result)

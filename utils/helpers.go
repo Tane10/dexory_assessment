@@ -25,17 +25,22 @@ func GetWorkingDirectory(w *http.ResponseWriter) (string, error) {
 	return cwd, nil
 }
 
-func HandleTestReportGen(w *http.ResponseWriter) (string, error) {
-	cwd, err := GetWorkingDirectory(w)
+func ReportDataRouteHandler(w *http.ResponseWriter) (string, error) {
+	cwd, err := os.Getwd()
 	if err != nil {
+		http.Error(*w,
+			api.NewCustomError("Failed to get working directory", err.Error()),
+			http.StatusInternalServerError)
 		return "", err
 	}
 
 	if os.Getenv("TESTING") == "true" {
-		steps := filepath.Join("..", "..", "..")
-		cwd = filepath.Join(cwd, steps)
+		cwd = filepath.Join(cwd, "/test_data/")
+		return cwd, nil
+
 	}
 
+	cwd = filepath.Join(cwd, "/data/")
 	return cwd, nil
 
 }
