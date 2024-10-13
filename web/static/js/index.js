@@ -74,6 +74,9 @@ const handleReportCheckboxChange = (selectedCheckbox) => {
 };
 
 const generateReportHandler = async (event) => {
+  const reportMessageEl = document.getElementById("report-message");
+  reportMessageEl.hidden = true;
+
   if (event) event.preventDefault();
   const checkedBoxes = document.querySelectorAll(".item-checkbox:checked");
   const selectedFiles = Array.from(checkedBoxes).map((cb) => cb.value);
@@ -82,6 +85,19 @@ const generateReportHandler = async (event) => {
 
   if (selectedFiles.length != 2) {
     alert("Please select 2 files");
+    return;
+  }
+
+  let jsonCount = 0;
+  let csvCount = 0;
+
+  for (const sf of selectedFiles) {
+    if (sf.match(".json")) jsonCount++;
+    if (sf.match(".csv")) csvCount++;
+  }
+
+  if (jsonCount != 1 && csvCount != 1) {
+    alert("Please select 1 Json file and 1 CSV file");
     return;
   }
 
@@ -100,10 +116,13 @@ const generateReportHandler = async (event) => {
     }
     const reportData = await generateReportResp.json();
     console.log(reportData);
+    reportMessageEl.hidden = false;
   } catch (error) {
     console.error(error);
     return;
   }
+  //TODO: find a more pleasing way to do this as is jarring when generating a report
+
   window.location.reload();
 };
 

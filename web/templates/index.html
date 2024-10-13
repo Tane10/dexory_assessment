@@ -41,6 +41,7 @@
       {{ if .Files }}
       <div class="mb-4">
         <h3>Select Files to Compare</h3>
+        <div class="mb-4"><span>Please Select a CSV file and a JSON file to generate report</span></div>
         <div class="mb-8">
           <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiles" aria-expanded="false" aria-controls="collapseFiles">
             Select Items
@@ -68,6 +69,7 @@
         </div>
       </div>
       <div class="mb-4">
+        <span id="report-message" hidden>Report successfully generated</span>
         <!-- Button to compare two files -->
         <form id="generate-report-form">
           <button type="submit" id="generate-report" class="btn btn-success" onclick="generateReportHandler(event)" disabled>

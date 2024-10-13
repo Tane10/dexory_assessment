@@ -51,11 +51,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Render template
 	data := struct {
-		Files   []models.FileData
-		Reports []models.FileData
+		Files   *[]models.FileData
+		Reports *[]models.FileData
 	}{
-		Files:   files,
-		Reports: reports,
+		Files:   &files,
+		Reports: &reports,
 	}
 
 	templateErr := templates.Execute(w, data)

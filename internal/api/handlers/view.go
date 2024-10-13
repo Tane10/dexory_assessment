@@ -14,7 +14,7 @@ import (
 	"github.com/tane10/dexory_assignment/utils"
 )
 
-func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd string, fileName *string, fileData *os.File) {
+func actionHandler(action string, w http.ResponseWriter, r *http.Request, fileName *string, fileData *os.File) {
 	fAction := strings.ToLower(action)
 
 	var reportData []models.Report
@@ -77,8 +77,6 @@ func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd st
 
 	writer.Flush()
 
-	// TODO: We now have a tmp file downloaded with no data
-
 	// Serve the CSV file for download
 	w.Header().Set("Content-Type", "text/csv")
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", tmpCsvFileName))
@@ -124,7 +122,7 @@ func ViewHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		actionHandler(action, w, r, cwd, &fileName, file)
+		actionHandler(action, w, r, &fileName, file)
 
 	}
 
