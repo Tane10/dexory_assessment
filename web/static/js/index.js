@@ -24,14 +24,14 @@ const fileUploadHandler = async (event) => {
     });
 
     if (response.ok) {
-      alert(`File: ${file.name} has been uploaded! \nFile can be found if you click Select Files.`)
-      window.location.reload()
+      alert(
+        `File: ${file.name} has been uploaded! \nFile can be found if you click Select Files.`
+      );
+      window.location.reload();
     }
-   
   } catch (error) {
     console.error(error);
   }
-
 };
 
 const handleReportCheckboxChange = (selectedCheckbox) => {
@@ -84,16 +84,17 @@ const generateReportHandler = async (event) => {
     });
 
     if (!generateReportResp.ok) {
-       console.error("Failed to generate the report");
-    } else{
-      const reportData = await generateReportResp.json()
-      alert(`Report: ${reportData.filename} has been generated! \nReport can be found if you click Select a Report.`)
-      window.location.reload()
+      console.error("Failed to generate the report");
     }
   } catch (error) {
     console.error(error);
   }
 
+  const reportData = await generateReportResp.json();
+  alert(
+    `Report: ${reportData.filename} has been generated! \nReport can be found if you click Select a Report.`
+  );
+  window.location.reload();
 };
 
 const reportDisplayHandler = async () => {
@@ -251,5 +252,9 @@ const handleSelectFilesCheckboxChange = (selectedCheckbox) => {
 
   const genReportButton = document.getElementById("generate-report");
 
-  genReportButton.disabled = !(checkedBoxes.length === 2 && (jsonCount === 1 && csvCount === 1));
+  genReportButton.disabled = !(
+    checkedBoxes.length === 2 &&
+    jsonCount === 1 &&
+    csvCount === 1
+  );
 };
