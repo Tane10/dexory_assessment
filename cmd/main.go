@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/tane10/dexory_assignment/api/routes"
+	"github.com/tane10/dexory_assignment/internal/api/routes"
 )
 
 func main() {

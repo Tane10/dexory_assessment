@@ -9,10 +9,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/tane10/dexory_assignment/api/models"
+	"github.com/tane10/dexory_assignment/internal/api"
+	"github.com/tane10/dexory_assignment/internal/api/models"
 	"github.com/tane10/dexory_assignment/utils"
-
-	"github.com/tane10/dexory_assignment/api"
 )
 
 func actionHandler(action string, w http.ResponseWriter, r *http.Request, cwd string, fileName *string, fileData *os.File) {

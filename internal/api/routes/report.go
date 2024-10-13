@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	"github.com/tane10/dexory_assignment/api/handlers"
+	"github.com/tane10/dexory_assignment/internal/api/handlers"
 )
 
 func ReportRoutes() {

@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"github.com/tane10/dexory_assignment/api/handlers"
 	"net/http"
+
+	"github.com/tane10/dexory_assignment/internal/api/handlers"
 )
 
 func HomeRoutes() {

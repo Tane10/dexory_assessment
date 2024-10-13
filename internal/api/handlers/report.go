@@ -14,8 +14,8 @@ import (
 	"github.com/tane10/dexory_assignment/utils"
 
 	"github.com/google/uuid"
-	"github.com/tane10/dexory_assignment/api"
-	"github.com/tane10/dexory_assignment/api/models"
+	"github.com/tane10/dexory_assignment/internal/api"
+	"github.com/tane10/dexory_assignment/internal/api/models"
 )
 
 func ReportHandler(w http.ResponseWriter, r *http.Request) {

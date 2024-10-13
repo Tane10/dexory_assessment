@@ -2,13 +2,14 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/tane10/dexory_assignment/utils"
 	"io"
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/tane10/dexory_assignment/api"
+	"github.com/tane10/dexory_assignment/utils"
+
+	"github.com/tane10/dexory_assignment/internal/api"
 )
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {

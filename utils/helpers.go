@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/tane10/dexory_assignment/api"
+	"github.com/tane10/dexory_assignment/internal/api"
 )
 
 func GetWorkingDirectory(w http.ResponseWriter) (string, error) {

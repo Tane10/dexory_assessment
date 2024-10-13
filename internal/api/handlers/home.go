@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/tane10/dexory_assignment/api"
-	"github.com/tane10/dexory_assignment/api/models"
+	"github.com/tane10/dexory_assignment/internal/api"
+	"github.com/tane10/dexory_assignment/internal/api/models"
 	"github.com/tane10/dexory_assignment/utils"
 )
 
