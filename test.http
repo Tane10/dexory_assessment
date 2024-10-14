@@ -1,9 +1,3 @@
-# Test the GET /view/{id} route
-GET http://localhost:8080/view/123
-Accept: application/json
-
-###
-
 # Test the POST /upload route
 POST http://localhost:8080/upload?type=file
 Content-Type: multipart/form-data; boundary=----boundary
@@ -30,8 +24,14 @@ Content-Type: application/json
 
 ###
 
-# Test the GET /report route
-GET http://localhost:8080/view?file=mini-report.json
+# Test the GET /view?file=reports/report.json&action=download route
+GET http://localhost:8080/view?file=reports/report_13-10-2024_22:36:28_tfwuRaKeQ2-UBWEgupSEHA.json&action=download
+Accept: application/json
+
+###
+
+# Test the GET /view?file=reports/report.json route
+GET http://localhost:8080/view?file=reports/report_13-10-2024_22:36:28_tfwuRaKeQ2-UBWEgupSEHA.json
 Accept: application/json
 
 ###
@@ -44,11 +44,3 @@ Content-Type: application/json
 
 ###
 
-# Test the POST /export route
-POST http://localhost:8080/export
-Content-Type: application/json
-
-{
-  "exportFormat": "csv",
-  "filter": "last_month"
-}

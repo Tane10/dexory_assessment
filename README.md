@@ -1,23 +1,25 @@
 # File Upload and Comparison Web Application
 
+**NOTE: Requires Go version 1.23 or higher**
+
 ## Overview
 
-This web application allows users to upload CSV or JSON files and compare the contents of the uploaded files. It provides a user-friendly interface for selecting files, viewing reports, and downloading results.
+This web application allows users to upload CSV or JSON files and compare the contents of the uploaded files. It provides an intuitive interface for selecting files, viewing comparison reports, and downloading the results.
 
 ## Features
 
-- **File Upload**: Users can upload CSV or JSON files.
-- **File Comparison**: After uploading, users can select files to compare.
-- **Report Generation**: The application generates a comparison report based on the uploaded files.
-- **User Interface**: A clean and simple UI built with HTML, CSS, and Bootstrap for responsive design.
-- **Scrollable Table**: Reports are displayed in a scrollable table format for easy viewing.
+- **File Upload**: Upload CSV or JSON files for comparison.
+- **File Comparison**: Select files to compare after uploading.
+- **Report Generation**: Generates a detailed comparison report based on the file contents.
+- **User Interface**: Built with HTML, CSS, and Bootstrap.
+- **Report Interface**: Reports are displayed in an easy-to-read table format.
 
 ## Technologies Used
 
-- Go (Golang) for the backend server
-- HTML, CSS, Bootstrap for the frontend
-- JavaScript for asynchronous requests
-- JSON and CSV formats for data storage and exchange
+- **Backend**: Go (Golang)
+- **Frontend**: HTML, CSS, Bootstrap
+- **JavaScript**: For asynchronous requests
+- **Data Formats**: JSON and CSV
 
 ## Installation
 
@@ -29,52 +31,68 @@ This web application allows users to upload CSV or JSON files and compare the co
    ```
 
 2. **Install Dependencies**:
-   Make sure you have Go installed. You can download it from [the official Go website](https://golang.org/dl/).
+
+   Ensure you have Go installed. Download the latest version from [Go's official website](https://golang.org/dl/).
+
+   Once Go is installed, run the following command to install necessary Go modules:
+
+   ```bash
+   go mod tidy
+   ```
 
 3. **Run the Application**:
-   Navigate to the project directory and run:
+
+   To start the web application, navigate to the project directory and run:
+
    ```bash
-   go run main.go
+   go run cmd/main.go
    ```
-   The application will start running on `http://localhost:8080`.
+
+   The server will start at `http://localhost:8080`.
 
 ## Usage
 
 1. Open your web browser and navigate to `http://localhost:8080`.
-2. Use the "Choose a file to upload" button to select a CSV or JSON file from your local machine.
-3. After uploading, you can select files from the dropdown to compare.
-4. Click the "Click to Generate Reports" button to view the comparison report.
-5. Reports will be displayed in a scrollable table format.
-6. Optionally, you can download the report as needed.
+2. Use the _Choose a file_ button to upload either a CSV or JSON file from your local machine.
+3. After uploading, you can view the uploaded files by clicking _Select Files_.
+4. Select one CSV file and one JSON file, then click the _Click to Generate Reports_ button to generate a report.
+5. To view generated reports, click _Select a Report_ and then click _View_.
+6. The report will be displayed in a table format.
+7. If needed, download the generated report by selecting a report and clicking _Download_.
 
-## Directory Structure
+## How to Run Tests
 
-```plaintext
-/your_project
-├── internal                  # Internal packages for private use
-│   └── directory_utils.go    # Utility functions for handling directories
-├── static                    # Static assets (CSS, JS)
-│   ├── css
-│   └── js
-├── templates                 # HTML templates for rendering views
-│   └── index.html
-└── main.go                   # Main application entry point
+### Running Unit Tests:
+
+You can run all unit tests in the project by executing:
+
+```bash
+go test ./... -v
 ```
 
-## Functionality
+This will run the tests in verbose mode, providing detailed information about each test.
 
-### File Upload
+### HTTP API Testing:
 
-- Users can upload files via a form that restricts uploads to CSV and JSON formats.
+In addition to unit tests, you can test API endpoints using the `test.http` file provided. This file contains predefined HTTP requests for testing the API.
 
-### File Comparison
+To run these tests:
 
-- The application compares the contents of the uploaded files and generates a report displaying:
-  - The name of the location
-  - Whether or not the location was successfully scanned
-  - Whether or not the location was occupied
-  - The expected and detected barcodes
+1. Open `test.http` in an IDE that supports HTTP requests (such as VS Code or IntelliJ).
+2. Execute the individual HTTP requests directly from the IDE, or use a tool like `curl` or [HTTPie](https://httpie.io/) to manually send requests.
 
-### Report Generation
+### Bash Script for File Upload:
 
-- A report is generated and displayed in a scrollable HTML table, allowing for easy access to information.
+You can also test file uploads via the provided bash script `robotFileUpload.sh`. This script allows uploading files to the server via the terminal.
+
+1. Ensure the script has executable permissions:
+
+   ```bash
+   chmod +x scripts/robotFileUpload.sh
+   ```
+
+2. Run the script by specifying the file path and file type (either `csv` or `json`):
+
+   ```bash
+   ./scripts/robotFileUpload.sh path/to/file.csv csv
+   ```
